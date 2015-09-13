@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+	xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:int-file="http://www.springframework.org/schema/integration/file"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/integration
+http://www.springframework.org/schema/integration/spring-integration.xsd
+http://www.springframework.org/schema/integration/xml
+http://www.springframework.org/schema/integration/xml/spring-integration-xml.xsd
+http://www.springframework.org/schema/integration/stream
+http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+http://www.springframework.org/schema/integration/file
+http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+	<!-- Declare the gateway -->
+	<int:gateway id="shop" service-interface="com.anshul.gateway.Shop" />
+	<!-- Declare the input channel in which Orders are placed for processing -->
+	<int:channel id="ordersChannel" />
+	<int:transformer input-channel="ordersChannel" method="transform"
+		output-channel="orderXMLHeaderEnricherChannel" ref="orderTransformer" />
+	<bean id="orderTransformer" class="com.anshul.transformer.OrderTransformer" />
+	
+	
+	<int:channel id="orderXMLHeaderEnricherChannel" />
+	<int:header-enricher input-channel="orderXMLHeaderEnricherChannel" output-channel="orderXMLTransformerChannel">
+		<int:header name="orderID" method="putOrderIDInHeader" ref="orderIDHeaderEnricher"/>
+	</int:header-enricher>
+	<bean id="orderIDHeaderEnricher" class="com.anshul.enricher.OrderIDHeaderEnricher"/>
+	
+	
+	
+	
+	
+	
+	
+	<int:channel id="orderXMLTransformerChannel" />
+	<bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" value="com.anshul.generated.order.data" />
+	</bean>
+	<bean id="resultToDocumentTransformer"
+		class="org.springframework.integration.xml.transformer.ResultToDocumentTransformer" />
+	<bean id="resultToStringTransformer"
+		class="org.springframework.integration.xml.transformer.ResultToStringTransformer" />
+	<int-xml:marshalling-transformer
+		marshaller="jaxb2Marshaller" output-channel="printXMLResultChannel"
+		input-channel="orderXMLTransformerChannel" result-transformer="resultToStringTransformer" />
+	<int:channel id="printXMLResultChannel" />
+	<int-file:outbound-gateway directory="\anshulFilesOut" request-channel="printXMLResultChannel" filename-generator="orderFileNameGenerator" reply-channel="nullChannel"/>
+	<bean id="orderFileNameGenerator" class="com.anshul.fileNameGenerator.OrderFileNameGenerator" >
+		<property name="jaxb2Marshaller" ref="jaxb2Marshaller"/>
+	</bean>
+	
+	
+</beans>	
+	

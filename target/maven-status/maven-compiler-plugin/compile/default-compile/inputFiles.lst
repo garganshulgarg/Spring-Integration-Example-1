@@ -1,0 +1,10 @@
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/generated/order/data/ObjectFactory.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/generated/order/data/package-info.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/transformer/OrderTransformer.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/splitter/OrderSplitter.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/gateway/Shop.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/generated/order/data/Order.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/data/Item.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/main/OnlineShop.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/data/Order.java
+/home/anshul/Spring Integration/workspace/spring-integration-core/src/main/java/com/anshul/data/OrderItem.java
